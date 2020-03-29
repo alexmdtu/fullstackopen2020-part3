@@ -3,24 +3,24 @@ const app = express()
 
 let persons = [
     {
-        "name": "Arto Hellas",
-        "number": "01487621",
-        "id": 1
+        name: "Arto Hellas",
+        number: "01487621",
+        id: 1
     },
     {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
+        name: "Ada Lovelace",
+        number: "39-44-5323523",
+        id: 2
     },
     {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
+        name: "Dan Abramov",
+        number: "12-43-234345",
+        id: 3
     },
     {
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122",
-        "id": 4
+        name: "Mary Poppendieck",
+        number: "39-23-6423122",
+        id: 4
     }
 ]
 
@@ -56,6 +56,36 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id)
 
     response.status(204).end()
+})
+
+const getRandomInt = () => {
+    return Math.floor(Math.random() * 50000)
+}
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    if (!body.name) {
+        return response.status(400).json({
+            error: 'name missing'
+        })
+    }
+
+    if (!body.number) {
+        return response.status(400).json({
+            error: 'number missing'
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: getRandomInt(),
+    }
+
+    persons = persons.concat(person)
+
+    response.json(person)
 })
 
 const PORT = 3001

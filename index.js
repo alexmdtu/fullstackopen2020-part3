@@ -85,33 +85,31 @@ const getRandomInt = () => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (!body.name) {
+    if (body.name === undefined) {
         return response.status(400).json({
             error: 'name missing'
         })
     }
 
-    if (persons.find(person => person.name === body.name)) {
-        return response.status(400).json({
-            error: 'person already exists'
-        })
-    }
+    // Person.find({ name: body.name })
+    //     .then(response.status(400).json({
+    //         error: 'person already exists'
+    //     }))
 
-    if (!body.number) {
+    if (body.number === undefined) {
         return response.status(400).json({
             error: 'number missing'
         })
     }
 
-    const person = {
+    const person = new Person({
         name: body.name,
-        number: body.number,
-        id: getRandomInt(),
-    }
+        number: body.name
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson.toJSON())
+    })
 })
 
 const PORT = process.env.PORT

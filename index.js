@@ -94,11 +94,6 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    // Person.find({ name: body.name })
-    //     .then(response.status(400).json({
-    //         error: 'person already exists'
-    //     }))
-
     if (body.number === undefined) {
         return response.status(400).json({
             error: 'number missing'
@@ -107,12 +102,43 @@ app.post('/api/persons', (request, response) => {
 
     const person = new Person({
         name: body.name,
-        number: body.name
+        number: body.number
     })
 
     person.save().then(savedPerson => {
         response.json(savedPerson.toJSON())
     })
+
+    // Person.find({ name: body.name })
+    //     .then(result => {
+    //         app.put('/api/persons/:id', (request, response) => {
+    //             Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    //                 .then(updatedPerson => {
+    //                     response.json(updatedPerson.toJSON())
+    //                 })
+    //                 .catch(error => {
+    //                     console.log("some error while put was used")
+    //                 })
+    //         })
+    //     })
+    //     .catch(rejection => {
+
+    //     })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => {
+            response.json(updatedPerson.toJSON())
+        })
+        .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {

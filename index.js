@@ -55,10 +55,17 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-    res.send(`
-    <p>Phonebook has info for ${persons.length} people</p>
-    <p>${new Date()}</p>
-    `)
+    Person.count({})
+        .then(result => {
+            res.send(`
+            <p>Phonebook has info for ${result} people</p>
+            <p>${new Date()}</p>
+            `)
+        })
+        .catch(error => {
+            response.status(404).end()
+        })
+
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -108,22 +115,6 @@ app.post('/api/persons', (request, response) => {
     person.save().then(savedPerson => {
         response.json(savedPerson.toJSON())
     })
-
-    // Person.find({ name: body.name })
-    //     .then(result => {
-    //         app.put('/api/persons/:id', (request, response) => {
-    //             Person.findByIdAndUpdate(request.params.id, person, { new: true })
-    //                 .then(updatedPerson => {
-    //                     response.json(updatedPerson.toJSON())
-    //                 })
-    //                 .catch(error => {
-    //                     console.log("some error while put was used")
-    //                 })
-    //         })
-    //     })
-    //     .catch(rejection => {
-
-    //     })
 })
 
 app.put('/api/persons/:id', (request, response, next) => {

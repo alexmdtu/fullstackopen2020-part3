@@ -1,8 +1,4 @@
 const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator');
-
-mongoose.set('useFindAndModify', false)
-mongoose.set('useCreateIndex', true);
 
 const url = process.env.MONGODB_URI
 
@@ -15,6 +11,11 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch((error) => {
         console.log('error connecting to MongoDB:', error.message)
     })
+
+const uniqueValidator = require('mongoose-unique-validator');
+
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true);
 
 const personSchema = new mongoose.Schema({
     name: {
